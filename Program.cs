@@ -1,3 +1,6 @@
+using Get_Together_Riders.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace Get_Together_Riders
 {
     public class Program
@@ -6,7 +9,14 @@ namespace Get_Together_Riders
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // read in our DB Connection string from appsettings.json
             var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
+
+            // setup our DB context and read in the connection string from app settings
+            builder.Services.AddDbContext<GTRDbContext>(options => {
+                options.UseSqlServer(
+                    builder.Configuration["ConnectionStrings:BethanysPieShopDbContextConnection"]);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorPages(); // allow use of Razor pages (as opposed to MVC controllers with views)
