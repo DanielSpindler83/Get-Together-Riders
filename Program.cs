@@ -6,7 +6,7 @@ namespace Get_Together_Riders
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'BethanysPieShopDbContextConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
 
             // Add services to the container.
             builder.Services.AddRazorPages(); // allow use of Razor pages (as opposed to MVC controllers with views)
