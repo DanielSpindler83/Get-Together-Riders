@@ -15,7 +15,7 @@ namespace Get_Together_Riders
             // setup our DB context and read in the connection string from app settings
             builder.Services.AddDbContext<GTRDbContext>(options => {
                 options.UseSqlServer(
-                    builder.Configuration["ConnectionStrings:BethanysPieShopDbContextConnection"]);
+                    builder.Configuration["ConnectionStrings:GTRDbContextConnection"]);
             });
 
             // Add services to the container.
