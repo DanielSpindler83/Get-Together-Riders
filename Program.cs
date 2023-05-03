@@ -26,6 +26,9 @@ namespace Get_Together_Riders
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage(); // this is for dev only
+
+                // set log level in appsettings.json
+                app.UseHttpLogging(); // lets us log incoming and outgoing requests as they traverse the request pipeline
             }
 
             //app.UseHttpsRedirection(); i dont think we need this right now
