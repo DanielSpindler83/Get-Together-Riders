@@ -16,5 +16,6 @@
         public string? GTRNumber { get; set; }
         public string? Status { get; set; }
         public bool IsActive { get; set; } = true;
+        public List<RideEventEnrollment> RideEventEnrollments { get; set; } = new List<RideEventEnrollment>();
     }
 }
