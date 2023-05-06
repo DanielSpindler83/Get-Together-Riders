@@ -40,6 +40,9 @@ namespace Get_Together_Riders
 
             app.MapRazorPages(); // enable razor page routing - pages folder
 
+            // run our DB seed - will only populate data if none exists in the DB
+            DbInitializer.Seed(app);
+
             app.Run();
         }
     }
