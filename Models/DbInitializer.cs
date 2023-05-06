@@ -32,6 +32,8 @@ namespace Get_Together_Riders.Models
                 );
             }
 
+            context.SaveChanges();
+
             if (!context.RideEventEnrollments.Any())
             {
                 context.RideEventEnrollments.AddRange(
