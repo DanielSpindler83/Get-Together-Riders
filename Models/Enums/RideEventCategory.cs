@@ -1,4 +1,4 @@
-﻿namespace Get_Together_Riders.Models
+﻿namespace Get_Together_Riders.Models.Enums
 {
     public enum RideEventCategory
     {
