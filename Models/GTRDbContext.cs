@@ -12,5 +12,6 @@ namespace Get_Together_Riders.Models
         // add DbSets here....
         public DbSet<Rider> Riders { get; set; }
         public DbSet<RideEvent> RideEvents { get; set; }
+        public DbSet<RideEventEnrollment> RideEventEnrollments { get; set; }
     }
 }
