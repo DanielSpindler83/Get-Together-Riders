@@ -12,6 +12,9 @@ namespace Get_Together_Riders
             // read in our DB Connection string from appsettings.json
             var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
 
+            //// add DI services collection
+            builder.Services.AddScoped<IRiderRepository, RiderRepository>(); //our custom DI services
+
             // setup our DB context and read in the connection string from app settings
             builder.Services.AddDbContext<GTRDbContext>(options => {
                 options.UseSqlServer(
