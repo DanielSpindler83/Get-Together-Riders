@@ -9,6 +9,9 @@ namespace Get_Together_Riders
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            string AppSecret = builder.Configuration["AppSecret"];
+            Console.WriteLine(AppSecret);
+
             // read in our DB Connection string from appsettings.json
             var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
 
