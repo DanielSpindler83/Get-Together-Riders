@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Get_Together_Riders.Models
 {
-    public class GTRDbContext : DbContext
+    public class GTRDbContext : IdentityDbContext
     {
 
         public GTRDbContext(DbContextOptions<GTRDbContext> options) : base(options)

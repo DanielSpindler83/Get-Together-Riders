@@ -1,5 +1,10 @@
 using Get_Together_Riders.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Security.Claims;
+using IdentityModel;
 
 namespace Get_Together_Riders
 {
@@ -9,8 +14,8 @@ namespace Get_Together_Riders
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // read in from local secrets.json - this file is NOT checked into GIT
             string AppSecret = builder.Configuration["AppSecret"];
-            Console.WriteLine(AppSecret);
 
             // read in our DB Connection string from appsettings.json
             var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
@@ -23,6 +28,47 @@ namespace Get_Together_Riders
                 options.UseSqlServer(
                     builder.Configuration["ConnectionStrings:GTRDbContextConnection"]);
             });
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<GTRDbContext>();
+
+
+            // Facebook login stuff - https://www.youtube.com/watch?v=xzcDoUPy8Mk
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/account/facebook-login";
+            })
+            .AddFacebook(options =>
+            {
+                // https://www.thecodehubs.com/how-to-login-with-facebook-in-asp-net-core-identity/
+                options.AppId = "3731952183691780";
+                options.AppSecret = AppSecret;
+                options.Scope.Add("email");
+                options.Scope.Add("public_profile");
+                options.Fields.Add("name");
+                options.Fields.Add("email");
+
+                // https://stackoverflow.com/questions/45855660/how-to-retrieve-facebook-profile-picture-from-logged-in-user-with-asp-net-core-i
+                options.Fields.Add("picture");
+                options.Events = new OAuthEvents
+                {
+                    OnCreatingTicket = context =>
+                    {
+                        var identity = (ClaimsIdentity)context.Principal.Identity;
+                        var profileImg = context.User.GetProperty("picture").GetProperty("data").GetProperty("url").ToString();
+                        identity.AddClaim(new Claim(JwtClaimTypes.Picture, profileImg));
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            ////
+
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             // Add services to the container.
             builder.Services.AddRazorPages(); // allow use of Razor pages (as opposed to MVC controllers with views)
@@ -42,7 +88,8 @@ namespace Get_Together_Riders
 
             //app.UseRouting(); i dont think we need this right now - we have routing via MapRazorPages();
 
-            //app.UseAuthorization(); i dont think we need this right now
+            app.UseAuthentication(); // need this for facebook and asp.net core identity
+            app.UseAuthorization(); 
 
             app.MapRazorPages(); // enable razor page routing - pages folder
 
