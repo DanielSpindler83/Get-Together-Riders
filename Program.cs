@@ -47,6 +47,7 @@ namespace Get_Together_Riders
                 // https://www.thecodehubs.com/how-to-login-with-facebook-in-asp-net-core-identity/
                 options.AppId = "3731952183691780";
                 options.AppSecret = AppSecret;
+                options.CallbackPath = "/signin-facebook"; // this is the default and is the Valid OAuth Redirect URIs set in Facebook App (Facebook Login --> Settings)
                 options.Scope.Add("email");
                 options.Scope.Add("public_profile");
                 options.Fields.Add("name");
