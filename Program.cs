@@ -29,9 +29,6 @@ namespace Get_Together_Riders
                     builder.Configuration["ConnectionStrings:GTRDbContextConnection"]);
             });
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<GTRDbContext>();
-
 
             // Facebook login stuff - https://www.youtube.com/watch?v=xzcDoUPy8Mk
             builder.Services.AddAuthentication(options =>
@@ -68,6 +65,10 @@ namespace Get_Together_Riders
             });
 
             ////
+            
+            // Order of this is IMPORTANT - add auth before adding the DefaultIdentity
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<GTRDbContext>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
