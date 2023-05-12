@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-
+using Get_Together_Riders.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Get_Together_Riders.Areas.Identity.Pages.Account
 {
@@ -25,13 +26,16 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly IRiderRepository _riderRepository;
 
         public ExternalLoginModel(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IRiderRepository riderRepository
+            )
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -39,44 +43,27 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _riderRepository = riderRepository;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         public string ProviderDisplayName { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -126,73 +113,27 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                     _logger.LogInformation("{ClaimType} : {ClaimValue}", claim.Type, claim.Value);
                 }
 
-
+                
                 var profilePictureUrl = claims?.FirstOrDefault(x => x.Type.Equals("Picture", StringComparison.OrdinalIgnoreCase))?.Value;
                 _logger.LogInformation("This user's profile picture URL = {profilePictureUrl}", profilePictureUrl);
 
                 //I added the below to pull email from claim returned by facebook
                 _logger.LogInformation("{Email} logged in with {LoginProvider} provider.", info.Principal.FindFirstValue(ClaimTypes.Email), info.LoginProvider);
                 _logger.LogInformation("{NameIdentifier} logged in with {LoginProvider} provider.", info.Principal.FindFirstValue(ClaimTypes.NameIdentifier), info.LoginProvider);
-                //_logger.LogInformation("{NameIdentifier} logged in with {LoginProvider} provider.", info.Principal.FindFirstValue(ClaimTypes.Picture), info.LoginProvider);
 
-                /* pull back a URL for the user's profile picture
-                string nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                string thumbnailUrl = $"https://graph.facebook.com/{nameIdentifier}/picture?fields=url";
+                // try and match facebook email to a rider - is this an existing user?
+                var rider = _riderRepository.GetRiderByEmail(info.Principal.FindFirstValue(ClaimTypes.Email));
 
-                //string profilePicUrl = null;
-                using (HttpClient httpClient = new HttpClient())
+                if (rider != null)
                 {
-                    var profilePicUrl = await httpClient.GetAsync(thumbnailUrl);
-                    _logger.LogInformation(profilePicUrl.ToString());
-                }
-                */
-
-                /* https://developers.facebook.com/docs/graph-api/reference/user/picture/
-                // Apps in Development mode that make tokenless requests on ASIDs will receive a silhouette image in response.
-                // Saving picture to a file
-                byte[] thumbnailBytes = null;
-                string nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                string thumbnailUrl = $"https://graph.facebook.com/{nameIdentifier}/picture?redirect=false";
-                using (HttpClient httpClient = new HttpClient())
+                    _logger.LogInformation("{Email} is an existing Rider.", info.Principal.FindFirstValue(ClaimTypes.Email) );
+                    _logger.LogInformation("{Rider}", rider.ToString());
+                } else
                 {
-                    thumbnailBytes = await httpClient.GetByteArrayAsync(thumbnailUrl);
+                    // this is a new rider
+                    _logger.LogInformation("{Email} is NOT existing Rider.", info.Principal.FindFirstValue(ClaimTypes.Email));
+                    // display a page with message to contact admin
                 }
-
-                string path = $"C:\\temp\\{nameIdentifier}.jpg";
-
-                System.IO.File.WriteAllBytes(path, thumbnailBytes);
-                */
-
-
-                /*
-                // https://stackoverflow.com/questions/9620278/how-do-i-make-calls-to-a-rest-api-using-c
-                string urlParameters = "?redirect=false";
-                string nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                string URL = $"https://graph.facebook.com/{nameIdentifier}/picture";
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(URL);
-
-                // Add an Accept header for JSON format.
-                client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
-                // Get data response
-                var response = client.GetAsync(urlParameters).Result;
-
-                _logger.LogInformation(response.Content.);
-
-                client.Dispose();
-                */
-
-
-                /*
-                // this works but only with a temp access token added in - no idea where to get an access token for the call
-                string nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                string thumbnailUrl = $"https://graph.facebook.com/{nameIdentifier}/picture?fields=url";
-                var accessToken = "EAA1CMNQ6SgQBAJLrvYwc3zUySZB1snI1M42pqHavHxPA0bcf0sYQPD7VvodjEi0NR9gVZC0iOOP6f3twmqBDeG4IeYGboO2iEOBfvqhskZCZBdvZAlotyLA1EVdp7K3BCEyMly67ZBQdZBTZCvpcJPjNfLjvsoSNBtgnDbhB7QGC3ZCROU2pPqL0L";
-                var client = new FacebookClient(accessToken);
-                dynamic me = client.Get($"{nameIdentifier}/picture?redirect=false");
-                */
 
                 return LocalRedirect(returnUrl);
             }
