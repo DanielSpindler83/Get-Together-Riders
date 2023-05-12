@@ -49,6 +49,7 @@ namespace Get_Together_Riders
                 options.Scope.Add("public_profile");
                 options.Fields.Add("name");
                 options.Fields.Add("email");
+                //options.AuthorizationEndpoint += "&prompt=login"; // force login even if user is logged in
 
                 // https://stackoverflow.com/questions/45855660/how-to-retrieve-facebook-profile-picture-from-logged-in-user-with-asp-net-core-i
                 options.Fields.Add("picture");
