@@ -1,8 +1,11 @@
-﻿namespace Get_Together_Riders.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Get_Together_Riders.Models
 {
     public class Rider
     {
         public int RiderID { get; set; }
+        public string? IdentityUserId { get; set; } // link to IdentityUserId
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
