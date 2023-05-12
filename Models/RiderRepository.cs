@@ -22,6 +22,11 @@ namespace Get_Together_Riders.Models
             return _gTRDbContext.Riders.FirstOrDefault(r => r.RiderID == id);
         }
 
+        public Rider GetRiderByEmail(string email)
+        {
+            return _gTRDbContext.Riders.FirstOrDefault(r => r.Email == email);
+        }
+
         public IEnumerable<Rider> GetAllRiders()
         {
             return _gTRDbContext.Set<Rider>().ToList();
