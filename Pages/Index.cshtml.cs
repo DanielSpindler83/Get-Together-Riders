@@ -7,10 +7,6 @@ namespace Get_Together_Riders.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
-        [BindProperty(SupportsGet = true)]
-        public string ReturnUrl { get; set; } // Add this line to define the ReturnUrl property
-
-
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
