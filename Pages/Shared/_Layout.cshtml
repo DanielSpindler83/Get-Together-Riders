@@ -1,11 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Get_Together_Riders.Models
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IRiderRepository riderRepository
 
 @{
-    var signInManager = Context.RequestServices.GetService<SignInManager<IdentityUser>>();
-    var User = Context.User;
+    var user = await UserManager.GetUserAsync(User);
+    var userName = user?.UserName;
+    var rider = riderRepository.GetRiderByIdentityId(user?.Id);
 }
 
 
@@ -42,7 +45,7 @@
                         {
                             <ul class="navbar-nav flex-grow-1">
                                 <li class="nav-item">
-                                    <p class="nav-link"> Welcome, @User.Identity.Name!</p>
+                                    <p class="nav-link"> Welcome, @rider.FirstName!</p>
                                 </li>
                                 <li class="nav-item">
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-antiforgery="true" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">

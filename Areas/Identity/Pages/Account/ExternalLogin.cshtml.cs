@@ -2,18 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System.Text;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 using Get_Together_Riders.Models;
-using Microsoft.Extensions.Logging;
+
 
 namespace Get_Together_Riders.Areas.Identity.Pages.Account
 {
@@ -47,34 +43,17 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
         }
 
 
-        [BindProperty]
-        public InputModel Input { get; set; }
-
-
+        public string Email { get; set; }
         public string ProviderDisplayName { get; set; }
-
-
         public string ReturnUrl { get; set; }
-
-
         [TempData]
         public string ErrorMessage { get; set; }
 
-
-        public class InputModel
-        {
-
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-        }
-
-        public IActionResult OnGet() => RedirectToPage("./Login");
+        public IActionResult OnGet() => RedirectToPage("/");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // We land here - immediatley after we Click the Facebook button on Login page
-
+            // We land here - immediately after we click the Facebook Login button
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -98,22 +77,21 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            // Sign in the user with this external login provider if the user already has a login.
+            // Attempt to sign user in locally using details from external login provider
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            if (result.Succeeded)
+            if (result.Succeeded) // if user already exists locally
             {
+                // get details of the local user that already exists
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                _logger.LogInformation("{Name} logged in with {LoginProvider} provider. Local identity id = {IdentityId}", info.Principal.Identity.Name, info.LoginProvider, user.Id);
 
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-
+                // display all claims to log
                 var claims = info.Principal.Claims.ToList();
-
-                // log out all claims
                 foreach (Claim claim in claims)
                 {
                     _logger.LogInformation("{ClaimType} : {ClaimValue}", claim.Type, claim.Value);
                 }
 
-                
                 var profilePictureUrl = claims?.FirstOrDefault(x => x.Type.Equals("Picture", StringComparison.OrdinalIgnoreCase))?.Value;
                 _logger.LogInformation("This user's profile picture URL = {profilePictureUrl}", profilePictureUrl);
 
@@ -121,18 +99,23 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                 _logger.LogInformation("{Email} logged in with {LoginProvider} provider.", info.Principal.FindFirstValue(ClaimTypes.Email), info.LoginProvider);
                 _logger.LogInformation("{NameIdentifier} logged in with {LoginProvider} provider.", info.Principal.FindFirstValue(ClaimTypes.NameIdentifier), info.LoginProvider);
 
-                // try and match facebook email to a rider - is this an existing user?
+                // try and match facebook email to a rider email - is this an existing rider that exists in the DB?
                 var rider = _riderRepository.GetRiderByEmail(info.Principal.FindFirstValue(ClaimTypes.Email));
 
                 if (rider != null)
                 {
-                    _logger.LogInformation("{Email} is an existing Rider.", info.Principal.FindFirstValue(ClaimTypes.Email) );
-                    _logger.LogInformation("{Rider}", rider.ToString());
+                    // existing rider
+                    _logger.LogInformation("{Email} is an existing Rider. They already exist in the DB with IdentityId = {IdentityId}", info.Principal.FindFirstValue(ClaimTypes.Email), rider.IdentityUserId );
+                    _logger.LogInformation("{Rider}", rider.ToString()); // just outputs the type - need a rider to string override coded up
+
+                    // for now do nothing - this user simply logs in - happy path - existing user with a local user
+                    return LocalRedirect(returnUrl);
+
                 } else
                 {
-                    // this is a new rider
+                    // no existing rider associated with this facebook email
                     _logger.LogInformation("{Email} is NOT existing Rider.", info.Principal.FindFirstValue(ClaimTypes.Email));
-                    // display a page with message to contact admin
+                    _logger.LogInformation("MESSAGE - please contact GTR admin to be setup in this app");
                 }
 
                 return LocalRedirect(returnUrl);
@@ -145,77 +128,61 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
+                // If the user does not have an account, create one based on their email
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input = new InputModel
+
+                    // try and match facebook email to a rider - is this an existing user?
+                    var rider = _riderRepository.GetRiderByEmail(info.Principal.FindFirstValue(ClaimTypes.Email));
+
+                    if (rider != null)
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
-                }
-                return Page();
-            }
-        }
+                        // existing rider
+                        _logger.LogInformation("{Email} exists as a rider. Lets create the local user.", info.Principal.FindFirstValue(ClaimTypes.Email));
+                        _logger.LogInformation("{Rider}", rider.ToString()); // just outputs the type - need a rider to string override coded up
 
-        public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the information about the user from the external login provider
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                ErrorMessage = "Error loading external login information during confirmation.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
-            if (ModelState.IsValid)
-            {
-                var user = CreateUser();
+                        var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                        await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
+                        await _emailStore.SetEmailAsync(user, Email, CancellationToken.None);
 
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
-                    {
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        var createResult = await _userManager.CreateAsync(user);
+                        if (createResult.Succeeded)
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            createResult = await _userManager.AddLoginAsync(user, info);
+                            if (createResult.Succeeded)
+                            {
+                                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                                var userId = await _userManager.GetUserIdAsync(user);
+
+                                //Set Rider Identity Id    
+                                rider.IdentityUserId = userId;
+                                _riderRepository.UpdateRider(rider);
+                                _riderRepository.SaveChanges();
+                                _logger.LogInformation("Rider Identity Id set as {userId}", userId);
+
+
+                                await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                            }
                         }
 
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect(returnUrl);
+                        ProviderDisplayName = info.ProviderDisplayName;
                     }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
+                    else
+                    {
+                        // no existing rider associated with this facebook email
+                        _logger.LogInformation("{Email} is NOT existing Rider and has no local login. A login will NOT be created.", info.Principal.FindFirstValue(ClaimTypes.Email));
+                        _logger.LogInformation("MESSAGE - please contact GTR admin to be setup in this app");
+                    }
 
-            ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
-            return Page();
+                }
+                return LocalRedirect(returnUrl);
+            }
         }
 
         private IdentityUser CreateUser()
