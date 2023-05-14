@@ -5,11 +5,12 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
+<br />
+<br />
+<h2>Active Ride Events</h2>
 <table class="table">
     <thead>
         <tr>
-            <th>Ride Event ID</th>
             <th>Event Name</th>
             <th>Event Category</th>
             <th>Start Date</th>
@@ -17,10 +18,33 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var rideEvent in Model.RideEvents)
+        @foreach (var rideEvent in Model.ActiveRideEvents)
         {
             <tr>
-                <td>@rideEvent.RideEventID</td>
+                <td>@rideEvent.EventName</td>
+                <td>@rideEvent.EventCategory</td>
+                <td>@rideEvent.StartDate</td>
+                <td>@rideEvent.EndDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<h2>Past Ride Events</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Category</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rideEvent in Model.PastRideEvents)
+        {
+            <tr>
                 <td>@rideEvent.EventName</td>
                 <td>@rideEvent.EventCategory</td>
                 <td>@rideEvent.StartDate</td>

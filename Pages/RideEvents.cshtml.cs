@@ -10,6 +10,9 @@ namespace Get_Together_Riders.Pages
     {
         private readonly IRideEventRepository _rideEventRepository;
 
+        public IEnumerable<RideEvent> ActiveRideEvents { get; set; }
+        public IEnumerable<RideEvent> PastRideEvents { get; set; }
+
         public IEnumerable<RideEvent> RideEvents { get; set; }
 
         public RideEventsModel(IRideEventRepository rideEventRepository)
@@ -19,7 +22,12 @@ namespace Get_Together_Riders.Pages
 
         public void OnGet()
         {
-            RideEvents = _rideEventRepository.GetAllRideEvents();
+            var allRideEvents = _rideEventRepository.GetAllRideEvents();
+
+            var currentDate = DateTime.Now;
+
+            ActiveRideEvents = allRideEvents.Where(re => re.StartDate <= currentDate && re.EndDate >= currentDate);
+            PastRideEvents = allRideEvents.Where(re => re.EndDate < currentDate);
         }
     }
 }
