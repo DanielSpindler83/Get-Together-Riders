@@ -1,0 +1,31 @@
+﻿@page
+@model Get_Together_Riders.Pages.RideEventsModel
+@{
+    ViewData["Title"] = "Ride Events";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ride Event ID</th>
+            <th>Event Name</th>
+            <th>Event Category</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rideEvent in Model.RideEvents)
+        {
+            <tr>
+                <td>@rideEvent.RideEventID</td>
+                <td>@rideEvent.EventName</td>
+                <td>@rideEvent.EventCategory</td>
+                <td>@rideEvent.StartDate</td>
+                <td>@rideEvent.EndDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
