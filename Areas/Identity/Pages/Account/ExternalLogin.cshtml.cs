@@ -116,6 +116,7 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                     // no existing rider associated with this facebook email
                     _logger.LogInformation("{Email} is NOT existing Rider.", info.Principal.FindFirstValue(ClaimTypes.Email));
                     _logger.LogInformation("MESSAGE - please contact GTR admin to be setup in this app");
+                    return RedirectToPage("/ContactAdmin");
                 }
 
                 return LocalRedirect(returnUrl);
@@ -178,6 +179,7 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                         // no existing rider associated with this facebook email
                         _logger.LogInformation("{Email} is NOT existing Rider and has no local login. A login will NOT be created.", info.Principal.FindFirstValue(ClaimTypes.Email));
                         _logger.LogInformation("MESSAGE - please contact GTR admin to be setup in this app");
+                        return RedirectToPage("/ContactAdmin");
                     }
 
                 }
