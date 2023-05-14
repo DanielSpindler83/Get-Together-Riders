@@ -22,6 +22,7 @@ namespace Get_Together_Riders
 
             //// add DI services collection
             builder.Services.AddScoped<IRiderRepository, RiderRepository>(); //our custom DI services
+            builder.Services.AddScoped<IRideEventRepository, RideEventRepository>(); //our custom DI services
 
             // setup our DB context and read in the connection string from app settings
             builder.Services.AddDbContext<GTRDbContext>(options => {
