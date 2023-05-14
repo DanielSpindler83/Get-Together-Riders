@@ -119,7 +119,6 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                     return RedirectToPage("/ContactAdmin");
                 }
 
-                return LocalRedirect(returnUrl);
             }
 
 
