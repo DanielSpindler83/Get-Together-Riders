@@ -52,6 +52,11 @@ namespace Get_Together_Riders.Models
         {
             _gTRDbContext.SaveChanges();
         }
+
+        public Rider GetRiderByIdentityId(string identityId)
+        {
+            return _gTRDbContext.Riders.FirstOrDefault(r => r.IdentityUserId == identityId);
+        }
     }
 
 }
