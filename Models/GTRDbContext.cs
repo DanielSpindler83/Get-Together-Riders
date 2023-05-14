@@ -15,6 +15,8 @@ namespace Get_Together_Riders.Models
         public DbSet<RideEvent> RideEvents { get; set; }
         public DbSet<RideEventEnrollment> RideEventEnrollments { get; set; }
 
+        public DbSet<RideEventLogEntry> RideEventLogEntrys { get; set; }
+
 
         //// allows nullable foreign key 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
