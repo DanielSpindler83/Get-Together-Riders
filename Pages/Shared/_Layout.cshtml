@@ -17,7 +17,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Get_Together_Riders</title>
+    <title>@ViewData["Title"] - Get Together Riders</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Get_Together_Riders.styles.css" asp-append-version="true" />
@@ -26,11 +26,6 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Get_Together_Riders</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -51,7 +46,7 @@
                                     <p class="nav-link"> Welcome, @rider.FirstName!</p>
                                 </li>
                                 <li class="nav-item">
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-antiforgery="true" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-antiforgery="true" asp-route-returnUrl="/" method="post">
                                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                                 </form>
                                 </li>
@@ -81,7 +76,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Get_Together_Riders - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2023 - Get Together Riders - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
