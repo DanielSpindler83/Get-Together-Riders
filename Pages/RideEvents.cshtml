@@ -2,6 +2,7 @@
 @model Get_Together_Riders.Pages.RideEventsModel
 @{
     ViewData["Title"] = "Ride Events";
+    //                     <a href="/AddRideEventLogEntry/Create?rideEventId=@rideEvent.RideEventID" class="btn btn-success">Add Ride Log Entry</a>
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -21,12 +22,15 @@
         @foreach (var rideEvent in Model.ActiveRideEvents)
         {
             <tr>
-                <td>@rideEvent.EventName</td>
-                <td>@rideEvent.EventCategory</td>
-                <td>@rideEvent.StartDate</td>
-                <td>@rideEvent.EndDate</td>
-                <td>
-                    <a href="/RideEventLogEntry/Create?rideEventId=@rideEvent.RideEventID" class="btn btn-success">Add Ride Log Entry</a>
+                <td class="col-3">
+                    <span>@rideEvent.EventName</span>
+                    <div class="ml-auto">
+                        <a asp-page="/AddRideEventLogEntry" asp-route-rideEventId="@rideEvent.RideEventID" class="btn btn-success btn-sm">Add Ride Log Entry</a>
+                    </div>
+                </td>
+                <td class="col-1">@rideEvent.EventCategory</td>
+                <td class="col-2">@rideEvent.StartDate</td>
+                <td class="col-3">@rideEvent.EndDate</td>
             </tr>
         }
     </tbody>
@@ -47,10 +51,10 @@
         @foreach (var rideEvent in Model.PastRideEvents)
         {
             <tr>
-                <td>@rideEvent.EventName</td>
-                <td>@rideEvent.EventCategory</td>
-                <td>@rideEvent.StartDate</td>
-                <td>@rideEvent.EndDate</td>
+                <td class="col-3">@rideEvent.EventName</td>
+                <td class="col-1">@rideEvent.EventCategory</td>
+                <td class="col-2">@rideEvent.StartDate</td>
+                <td class="col-3">@rideEvent.EndDate</td>
             </tr>
         }
     </tbody>

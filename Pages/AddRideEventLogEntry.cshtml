@@ -1,0 +1,33 @@
+﻿@page
+@model Get_Together_Riders.Pages.AddRideEventLogEntryModel
+@{
+    ViewData["Title"] = "Add Ride Event Log Entry";
+}
+
+<h2>Add Ride Event Log Entry</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="suburbLeftFrom">Suburb Left From:</label>
+        <input type="text" id="suburbLeftFrom" class="form-control" asp-for="RideEventLogEntry.SuburbLeftFrom" required>
+    </div>
+    <div class="form-group">
+        <label for="startTime">Start Time:</label>
+        <input type="datetime" id="startTime" class="form-control" asp-for="RideEventLogEntry.StartTime" required>
+    </div>
+    <div class="form-group">
+        <label for="kmsToCheckIn">Kilometers to Check-in:</label>
+        <input type="number" id="kmsToCheckIn" class="form-control" asp-for="RideEventLogEntry.KmsToCheckIn" required>
+    </div>
+    <div class="form-group">
+        <label for="totalKms">Total Kilometers:</label>
+        <input type="number" id="totalKms" class="form-control" asp-for="RideEventLogEntry.TotalKms" required>
+    </div>
+    
+    <!-- Add any additional fields here -->
+    
+    <input type="hidden" asp-for="RideEventLogEntry.RiderID" value="@Model.RiderID">
+    <input type="hidden" asp-for="RideEventLogEntry.RideEventID" value="@Model.RideEventID">
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
