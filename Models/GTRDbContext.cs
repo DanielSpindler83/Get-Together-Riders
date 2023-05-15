@@ -15,7 +15,7 @@ namespace Get_Together_Riders.Models
         public DbSet<RideEvent> RideEvents { get; set; }
         public DbSet<RideEventEnrollment> RideEventEnrollments { get; set; }
 
-        public DbSet<RideEventLogEntry> RideEventLogEntrys { get; set; }
+        public DbSet<RideEventLogEntry> RideEventLogEntries { get; set; }
 
 
         //// allows nullable foreign key 
