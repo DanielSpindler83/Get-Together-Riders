@@ -8,12 +8,29 @@
 
 <form method="post">
     <div class="form-group">
+        <label for="fullName">First Name:</label>
+        <input type="text" id="firstName" class="form-control" value="@Model.CurrentRider.FirstName" readonly>
+    </div>
+    <div class="form-group">
+        <label for="fullName">Last Name:</label>
+        <input type="text" id="lastName" class="form-control" value="@Model.CurrentRider.LastName" readonly>
+    </div>
+    <div class="form-group">
+        <label for="gtrNumber">GTR Number:</label>
+        <input type="text" id="gtrNumber" class="form-control" value="@Model.CurrentRider.GTRNumber" readonly>
+    </div>
+    <div class="form-group">
+        <label for="bikeModel">Bike Model:</label>
+        <input type="text" id="bikeModel" class="form-control" value="@Model.CurrentRider.BikeModel" readonly>
+    </div>
+
+    <div class="form-group">
         <label for="suburbLeftFrom">Suburb Left From:</label>
         <input type="text" id="suburbLeftFrom" class="form-control" asp-for="RideEventLogEntry.SuburbLeftFrom" required>
     </div>
     <div class="form-group">
         <label for="startTime">Start Time:</label>
-        <input type="datetime" id="startTime" class="form-control" asp-for="RideEventLogEntry.StartTime" required>
+        <input type="datetime-local" id="startTime" class="form-control" asp-for="RideEventLogEntry.StartTime" required>
     </div>
     <div class="form-group">
         <label for="kmsToCheckIn">Kilometers to Check-in:</label>
@@ -23,11 +40,9 @@
         <label for="totalKms">Total Kilometers:</label>
         <input type="number" id="totalKms" class="form-control" asp-for="RideEventLogEntry.TotalKms" required>
     </div>
-    
-    <!-- Add any additional fields here -->
-    
-    <input type="hidden" asp-for="RideEventLogEntry.RiderID" value="@Model.RiderID">
+
+    <input type="hidden" asp-for="RideEventLogEntry.RiderID" value="@Model.CurrentRider.RiderID">
     <input type="hidden" asp-for="RideEventLogEntry.RideEventID" value="@Model.RideEventID">
-    
+
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
