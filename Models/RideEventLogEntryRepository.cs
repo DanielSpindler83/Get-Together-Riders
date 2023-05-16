@@ -1,10 +1,5 @@
 ﻿namespace Get_Together_Riders.Models
 {
-    using Microsoft.EntityFrameworkCore;
-    using System.Linq;
-
-    using System.Linq;
-
     public class RideEventLogEntryRepository : IRideEventLogEntryRepository
     {
         private readonly GTRDbContext _gTRDbContext;
