@@ -1,0 +1,38 @@
+﻿@page
+@model AddRideEventModel
+@{
+    ViewData["Title"] = "Add Ride Event";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="eventName">Event Name</label>
+        <input type="text" class="form-control" id="eventName" name="EventName" value="@Model.RideEvent.EventName" />
+    </div>
+    <div class="form-group">
+        <label for="eventCategory">Event Category</label>
+        <select class="form-control" id="eventCategory" name="EventCategory">
+            <option value="">--Select--</option>
+            @foreach (var category in Model.RideEventCategories)
+            {
+                <option value="@category">@category</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" class="form-control" id="startDate" name="StartDate" value="@Model.RideEvent.StartDate.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" class="form-control" id="endDate" name="EndDate" value="@Model.RideEvent.EndDate.ToString("yyyy-MM-dd")" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Ride Event</button>
+</form>
