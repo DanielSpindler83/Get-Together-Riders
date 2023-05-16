@@ -103,6 +103,7 @@ namespace Get_Together_Riders
             DbInitializer.Seed(app);
 
 
+            //// - Setting up Roles
             // https://www.youtube.com/watch?v=Y6DCP-yH-9Q - setting up roles
             using (var scope = app.Services.CreateScope())
             {
@@ -129,8 +130,8 @@ namespace Get_Together_Riders
             }
 
             // [Authorize(Roles = "Admin")] - block we use for restricting to a role
-
-
+            // @if (User.IsInRole("Admin")) {} - use in a razor page
+            ////
 
             app.Run();
         }
