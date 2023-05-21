@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Get_Together_Riders.Models
+namespace Get_Together_Riders.Models.Database
 {
     public class GTRDbContext : IdentityDbContext
     {
 
         public GTRDbContext(DbContextOptions<GTRDbContext> options) : base(options)
-        { 
+        {
         }
 
         // add DbSets here....

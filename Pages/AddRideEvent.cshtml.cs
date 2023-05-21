@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Get_Together_Riders.Models.Interfaces;
 
 namespace Get_Together_Riders.Pages
 {

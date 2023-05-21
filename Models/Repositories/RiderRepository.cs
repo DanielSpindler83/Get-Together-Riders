@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Get_Together_Riders.Models.Database;
+using Get_Together_Riders.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace Get_Together_Riders.Models
+namespace Get_Together_Riders.Models.Repositories
 {
     public class RiderRepository : IRiderRepository
     {
