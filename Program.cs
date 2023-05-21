@@ -17,7 +17,9 @@ namespace Get_Together_Riders
             var builder = WebApplication.CreateBuilder(args);
 
             // read in from local secrets.json - this file is NOT checked into GIT
-            string AppSecret = builder.Configuration["AppSecret"];
+            //string AppSecret = builder.Configuration["AppSecret"];
+
+            string AppSecret = Environment.GetEnvironmentVariable("GTRFacebookAppSecret");
 
             // read in our DB Connection string from appsettings.json
             var connectionString = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
