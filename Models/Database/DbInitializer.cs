@@ -1,7 +1,7 @@
 ﻿using Get_Together_Riders.Models.Enums;
 using Microsoft.AspNetCore.Builder;
 
-namespace Get_Together_Riders.Models
+namespace Get_Together_Riders.Models.Database
 {
     public static class DbInitializer
     {

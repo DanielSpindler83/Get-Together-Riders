@@ -1,4 +1,4 @@
-﻿namespace Get_Together_Riders.Models
+﻿namespace Get_Together_Riders.Models.Interfaces
 {
     public interface IRideEventRepository
     {

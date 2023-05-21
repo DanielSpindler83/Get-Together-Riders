@@ -1,10 +1,12 @@
-using Get_Together_Riders.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Security.Claims;
 using IdentityModel;
+using Get_Together_Riders.Models.Interfaces;
+using Get_Together_Riders.Models.Repositories;
+using Get_Together_Riders.Models.Database;
 
 namespace Get_Together_Riders
 {

@@ -1,4 +1,5 @@
 using Get_Together_Riders.Models;
+using Get_Together_Riders.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;

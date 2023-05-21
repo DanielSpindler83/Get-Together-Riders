@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Get_Together_Riders.Models;
-
+using Get_Together_Riders.Models.Interfaces;
 
 namespace Get_Together_Riders.Areas.Identity.Pages.Account
 {

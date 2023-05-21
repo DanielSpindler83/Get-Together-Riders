@@ -1,4 +1,7 @@
-﻿namespace Get_Together_Riders.Models
+﻿using Get_Together_Riders.Models.Database;
+using Get_Together_Riders.Models.Interfaces;
+
+namespace Get_Together_Riders.Models.Repositories
 {
     public class RideEventRepository : IRideEventRepository
     {
