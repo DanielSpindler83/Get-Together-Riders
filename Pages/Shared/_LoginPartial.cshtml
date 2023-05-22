@@ -1,14 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Get_Together_Riders.Models.Interfaces
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IRiderRepository riderRepository
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userName = user?.UserName;
+    var rider = riderRepository.GetRiderByIdentityId(user?.Id);
+}
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
+        <li class="nav-item">
+            <p class="nav-link"> Welcome, @rider.FirstName!</p>
+        </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
             <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
@@ -17,11 +25,10 @@
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+        <li class="nav-item">
+            <form id="external-account" asp-area="Identity" asp-page="/Account/ExternalLogin" asp-route-returnUrl="/" asp-antiforgery="true" method="post" class="form-horizontal">
+                <button type="submit" class="btn btn-primary" name="provider" value="Facebook" title="Log in using your Facebook account">Login</button>
+            </form>
+        </li>
 }
 </ul>
