@@ -4,6 +4,7 @@ using Get_Together_Riders.Models.Repositories;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -72,6 +73,15 @@ namespace Get_Together_Riders
             if (builder.Environment.IsDevelopment())
             {
                 services.AddDatabaseDeveloperPageExceptionFilter();
+
+                services.AddHttpLogging(logging =>
+                {
+                    // https://bit.ly/aspnetcore6-httplogging 
+                    logging.LoggingFields = HttpLoggingFields.All;
+                    logging.MediaTypeOptions.AddText("application/javascript");
+                    logging.RequestBodyLogLimit = 4096;
+                    logging.ResponseBodyLogLimit = 4096;
+                });
             }
 
             // allow use of Razor pages (as opposed to MVC controllers with views)
@@ -84,10 +94,11 @@ namespace Get_Together_Riders
         {
             if (app.Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage(); // this is for dev only
-
                 // set log level in appsettings.json
                 app.UseHttpLogging(); // lets us log incoming and outgoing requests as they traverse the request pipeline
+
+                app.UseDeveloperExceptionPage(); // this is for dev only
+
             }
 
             //app.UseHttpsRedirection(); i dont think we need this right now
