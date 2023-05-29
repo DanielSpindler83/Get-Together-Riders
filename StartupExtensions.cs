@@ -1,4 +1,5 @@
-﻿using Get_Together_Riders.Models.Database;
+﻿using Get_Together_Riders.Middleware;
+using Get_Together_Riders.Models.Database;
 using Get_Together_Riders.Models.Interfaces;
 using Get_Together_Riders.Models.Repositories;
 using IdentityModel;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 
 namespace Get_Together_Riders
 {
-    public static class Extensions
+    public static class StartupExtensions
     {
 
         public static IServiceCollection RegisterServices(this IServiceCollection services, string appSecret, WebApplicationBuilder builder )
@@ -92,6 +93,9 @@ namespace Get_Together_Riders
 
         public static WebApplication RegisterMiddleware(this WebApplication app)
         {
+            // custom global exception handling
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 // set log level in appsettings.json
