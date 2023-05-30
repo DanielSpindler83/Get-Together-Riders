@@ -31,6 +31,7 @@ namespace Get_Together_Riders.Pages
         public async Task<IActionResult> OnGetAsync()
         {
             RideEventCategories = Enum.GetValues(typeof(RideEventCategory)).Cast<RideEventCategory>().ToList();
+            _logger.LogInformation("AddRideEvent OnGetAsync.");
             return Page();
         }
 
