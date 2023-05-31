@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace Get_Together_Riders
@@ -83,6 +84,14 @@ namespace Get_Together_Riders
                     logging.RequestBodyLogLimit = 4096;
                     logging.ResponseBodyLogLimit = 4096;
                 });
+
+                // Loggging learning about trace files - added to play with trace files and logging
+                // trace listeners use debug providers(not log level) to listen for log entries and if configured as below, write to file.
+                // example path = C:\Users\User\AppData\Local
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var tracePath = Path.Join(path, $"Log_GTR_{DateTime.Now.ToString("yyyMMdd-HHmm")}.log");
+                Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(tracePath)));
+                Trace.AutoFlush = true;
             }
 
             // allow use of Razor pages (as opposed to MVC controllers with views)
