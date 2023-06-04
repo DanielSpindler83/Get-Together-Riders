@@ -72,27 +72,27 @@ namespace Get_Together_Riders
                 .AddRoles<IdentityRole>() // https://www.youtube.com/watch?v=Y6DCP-yH-9Q - setting up roles
                 .AddEntityFrameworkStores<GTRDbContext>();
 
-            if (builder.Environment.IsDevelopment())
-            {
-                services.AddDatabaseDeveloperPageExceptionFilter();
+            //if (builder.Environment.IsDevelopment())
+            //{
+            //    services.AddDatabaseDeveloperPageExceptionFilter();
 
-                services.AddHttpLogging(logging =>
-                {
-                    // https://bit.ly/aspnetcore6-httplogging 
-                    logging.LoggingFields = HttpLoggingFields.All;
-                    logging.MediaTypeOptions.AddText("application/javascript");
-                    logging.RequestBodyLogLimit = 4096;
-                    logging.ResponseBodyLogLimit = 4096;
-                });
+            //    services.AddHttpLogging(logging =>
+            //    {
+            //        // https://bit.ly/aspnetcore6-httplogging 
+            //        logging.LoggingFields = HttpLoggingFields.All;
+            //        logging.MediaTypeOptions.AddText("application/javascript");
+            //        logging.RequestBodyLogLimit = 4096;
+            //        logging.ResponseBodyLogLimit = 4096;
+            //    });
 
-                // Loggging learning about trace files - added to play with trace files and logging
-                // trace listeners use debug providers(not log level) to listen for log entries and if configured as below, write to file.
-                // example path = C:\Users\User\AppData\Local
-                var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var tracePath = Path.Join(path, $"Log_GTR_{DateTime.Now.ToString("yyyMMdd-HHmm")}.log");
-                Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(tracePath)));
-                Trace.AutoFlush = true;
-            }
+            //    // Loggging learning about trace files - added to play with trace files and logging
+            //    // trace listeners use debug providers(not log level) to listen for log entries and if configured as below, write to file.
+            //    // example path = C:\Users\User\AppData\Local
+            //    var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            //    var tracePath = Path.Join(path, $"Log_GTR_{DateTime.Now.ToString("yyyMMdd-HHmm")}.log");
+            //    Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(tracePath)));
+            //    Trace.AutoFlush = true;
+            //}
 
             // allow use of Razor pages (as opposed to MVC controllers with views)
             services.AddRazorPages(); 
@@ -103,19 +103,19 @@ namespace Get_Together_Riders
         public static WebApplication RegisterMiddleware(this WebApplication app)
         {
             // custom global exception handling - https://github.com/StefanTheCode/GlobalErrorHandling
-            // app.UseMiddleware<ExceptionMiddleware>();
+            // app.UseMiddleware<ExceptionMiddleware>(); // this is for API's really - dont think ill use it. UseExceptionHandler is more useful.
 
             // pretty error pages are good hmmm K
             app.UseExceptionHandler("/Error");
 
-            if (app.Environment.IsDevelopment())
-            {
-                // set log level in appsettings.json
-                app.UseHttpLogging(); // lets us log incoming and outgoing requests as they traverse the request pipeline
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    // set log level in appsettings.json
+            //    app.UseHttpLogging(); // lets us log incoming and outgoing requests as they traverse the request pipeline
 
-                app.UseDeveloperExceptionPage(); // this is for dev only
+            //    app.UseDeveloperExceptionPage(); // this is for dev only
 
-            }
+            //}
 
             //app.UseHttpsRedirection(); i dont think we need this right now
             app.UseStaticFiles(); // add support for static files
