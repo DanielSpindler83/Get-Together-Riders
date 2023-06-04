@@ -42,17 +42,18 @@ namespace Get_Together_Riders.Pages
                 return Page();
             }
 
-            try
+            // this is for log testing - there is an outstanding issue here with how it loads errorhandler
+            if (RideEvent.EventName == "ERROR")
             {
+                throw new Exception("You cant call an event ERROR you muppet!");
+            } else
+            {
+                // should this has a try catch block? maybe let any errors go through to the errorhandler to show in the UI?
                 _rideEventRepository.AddRideEvent(RideEvent);
-                return RedirectToPage("/Index");
+                TempData["Message"] = "Ride Event Added Successfully!";
+                return RedirectToPage("/RideEvents");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error adding ride event");
-                ErrorMessage = "An error occurred while adding the ride event";
-                return Page();
-            }
+
         }
     }
 
