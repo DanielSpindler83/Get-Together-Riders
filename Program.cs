@@ -36,11 +36,11 @@ namespace Get_Together_Riders
                 }
             }
 
-            // assign the new admin role to ruckus_gypsy@hotmail.com
+            // assign the new admin role to my account
             using (var scope = app.Services.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                string email = "ruckus_gypsy@hotmail.com"; 
+                string email = "danielspindler83@gmail.com"; 
 
                 if(await userManager.FindByEmailAsync(email) != null)
                 {
