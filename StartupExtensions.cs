@@ -102,8 +102,11 @@ namespace Get_Together_Riders
 
         public static WebApplication RegisterMiddleware(this WebApplication app)
         {
-            // custom global exception handling
-            app.UseMiddleware<ExceptionMiddleware>();
+            // custom global exception handling - https://github.com/StefanTheCode/GlobalErrorHandling
+            // app.UseMiddleware<ExceptionMiddleware>();
+
+            // pretty error pages are good hmmm K
+            app.UseExceptionHandler("/Error");
 
             if (app.Environment.IsDevelopment())
             {
