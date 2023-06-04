@@ -1,6 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -18,8 +16,6 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
-        private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
         private readonly IRiderRepository _riderRepository;
 
@@ -28,45 +24,47 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender,
             IRiderRepository riderRepository
             )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
-            _emailStore = GetEmailStore();
             _logger = logger;
-            _emailSender = emailSender;
             _riderRepository = riderRepository;
         }
 
 
         public string Email { get; set; }
         public string ProviderDisplayName { get; set; }
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } = "/";
         [TempData]
         public string ErrorMessage { get; set; }
 
         public IActionResult OnGet() => RedirectToPage("/");
 
-        public IActionResult OnPost(string provider, string returnUrl = null)
+        public IActionResult OnPost(string provider)
         {
             // We land here - immediately after we click the Facebook Login button
-            // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            // We then request a redirect to the external login provider(Facebook)
+            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { ReturnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+            //// Return here after calling External Login provider
+
+
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                return RedirectToPage("/");
             }
+
+
             // here is where we get the info back from Facebook
             // something similar to here --> https://www.c-sharpcorner.com/article/retrieve-user-details-from-facebook-in-asp-net-core-applications/
             var info = await _signInManager.GetExternalLoginInfoAsync();
@@ -147,7 +145,6 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                         var user = CreateUser();
 
                         await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
-                        await _emailStore.SetEmailAsync(user, Email, CancellationToken.None);
 
                         var createResult = await _userManager.CreateAsync(user);
                         if (createResult.Succeeded)
@@ -199,13 +196,5 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<IdentityUser>)_userStore;
-        }
     }
 }
