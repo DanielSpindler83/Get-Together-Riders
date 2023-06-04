@@ -65,6 +65,7 @@ namespace Get_Together_Riders.Pages
 
             _rideEventLogEntryRepository.AddRideEventLogEntry(RideEventLogEntry);
             _rideEventLogEntryRepository.SaveChanges();
+            TempData["Message"] = "Ride Event Log Entry Added Successfully!";
 
             return RedirectToPage("/RideEvents");
         }

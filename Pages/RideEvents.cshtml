@@ -5,6 +5,13 @@
     //                     <a href="/AddRideEventLogEntry/Create?rideEventId=@rideEvent.RideEventID" class="btn btn-success">Add Ride Log Entry</a>
 }
 
+@if (ViewData["Message"] != null)
+{
+    <script>
+        alert("@ViewData["Message"]");
+    </script>
+}
+
 <h1>@ViewData["Title"]</h1>
 <br />
 <br />

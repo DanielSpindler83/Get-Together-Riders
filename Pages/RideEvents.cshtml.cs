@@ -23,6 +23,10 @@ namespace Get_Together_Riders.Pages
 
         public void OnGet()
         {
+            string message = TempData["Message"] as string;
+            // Pass the message to the view
+            ViewData["Message"] = message;
+
             var allRideEvents = _rideEventRepository.GetAllRideEvents();
 
             var currentDate = DateTime.Now;
