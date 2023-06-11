@@ -94,6 +94,9 @@ namespace Get_Together_Riders
             //    Trace.AutoFlush = true;
             //}
 
+            // Add authorization services
+            // services.AddAuthorization(); // Do I need this ?
+
             // allow use of Razor pages (as opposed to MVC controllers with views)
             services.AddRazorPages(); 
 
@@ -125,7 +128,8 @@ namespace Get_Together_Riders
             app.UseAuthentication(); // need this for facebook and asp.net core identity
             app.UseAuthorization();
 
-            app.MapRazorPages(); // enable razor page routing - pages folder
+            //app.MapRazorPages(); // enable razor page routing - pages folder
+            app.MapRazorPages().RequireAuthorization(); // trying out forcing authenticaiton and authorization
 
             return app;
         }
