@@ -11,10 +11,10 @@ namespace Get_Together_Riders
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            string FacebookAppSecret = Environment.GetEnvironmentVariable("GTRFacebookAppSecret") ?? throw new InvalidOperationException("Environment variable 'GTRFacebookAppSecret' not found.");
+            string MicrosoftLoginAppSecret = Environment.GetEnvironmentVariable("GTRMicrosoftLoginAppSecret") ?? throw new InvalidOperationException("Environment variable 'GTRMicrosoftLoginAppSecret' not found.");
             _ = builder.Configuration.GetConnectionString("GTRDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GTRDbContextConnection' not found.");
 
-            builder.Services.RegisterServices(FacebookAppSecret, builder);
+            builder.Services.RegisterServices(MicrosoftLoginAppSecret, builder);
 
             var app = builder.Build();
 

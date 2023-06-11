@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Get_Together_Riders.Pages
 {
+    [AllowAnonymous]
     public class ContactAdminModel : PageModel
     {
-        [AllowAnonymous]
         public void OnGet()
         {
         }

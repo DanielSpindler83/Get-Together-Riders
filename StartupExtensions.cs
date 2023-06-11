@@ -30,42 +30,11 @@ namespace Get_Together_Riders
             });
 
 
-            // Facebook login stuff - https://www.youtube.com/watch?v=xzcDoUPy8Mk
-            services.AddAuthentication(options =>
+            services.AddAuthentication().AddMicrosoftAccount(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/account/facebook-login";
-            })
-            .AddFacebook(options =>
-            {
-                // https://www.thecodehubs.com/how-to-login-with-facebook-in-asp-net-core-identity/
-                options.AppId = "1862186037494265";
-                options.AppSecret = appSecret;
-                options.CallbackPath = "/signin-facebook"; // this is the default and is the Valid OAuth Redirect URIs set in Facebook App (Facebook Login --> Settings)
-                options.Scope.Add("email");
-                options.Scope.Add("public_profile");
-                options.Fields.Add("name");
-                options.Fields.Add("email");
-                //options.AuthorizationEndpoint += "&prompt=login"; // force login even if user is logged in
-
-                // https://stackoverflow.com/questions/45855660/how-to-retrieve-facebook-profile-picture-from-logged-in-user-with-asp-net-core-i
-                options.Fields.Add("picture");
-                options.Events = new OAuthEvents
-                {
-                    OnCreatingTicket = context =>
-                    {
-                        var identity = (ClaimsIdentity)context.Principal.Identity;
-                        var profileImg = context.User.GetProperty("picture").GetProperty("data").GetProperty("url").ToString();
-                        identity.AddClaim(new Claim(JwtClaimTypes.Picture, profileImg));
-                        return Task.CompletedTask;
-                    }
-                };
+                options.ClientId = "df01c830-2308-4412-a3e2-e873dafa3981";
+                options.ClientSecret = appSecret;
             });
-
-            ////
 
             // Order of this is IMPORTANT - add auth before adding the DefaultIdentity
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -123,7 +92,7 @@ namespace Get_Together_Riders
             //app.UseHttpsRedirection(); i dont think we need this right now
             app.UseStaticFiles(); // add support for static files
 
-            //app.UseRouting(); i dont think we need this right now - we have routing via MapRazorPages();
+            app.UseRouting(); // not sure if needed or not
 
             app.UseAuthentication(); // need this for facebook and asp.net core identity
             app.UseAuthorization();
