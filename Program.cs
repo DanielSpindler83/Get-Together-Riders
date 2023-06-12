@@ -40,7 +40,7 @@ namespace Get_Together_Riders
             using (var scope = app.Services.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                string email = "danielspindler83@gmail.com"; 
+                string email = "danielspindler@hotmail.com"; 
 
                 if(await userManager.FindByEmailAsync(email) != null)
                 {

@@ -55,6 +55,7 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGetCallbackAsync(string remoteError = null)
         {
             //// Return here after calling External Login provider
+            ///
 
             if (remoteError != null)
             {
@@ -84,22 +85,23 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
             if (externalLoginInfo.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
             {
 
-                // try and match facebook email to a rider - is this an existing user?
+                // try and match provider email to a rider - is this an existing user?
                 var rider = _riderRepository.GetRiderByEmail(externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email));
 
                 if (rider != null)
                 {
                     // existing rider
                     _logger.LogInformation("{Email} exists as a rider. Lets create the local user.", externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email));
-                    _logger.LogInformation("{Rider}", rider.ToString()); // just outputs the type - need a rider to string override coded up
+                    _logger.LogInformation("{Rider}", rider.ToString()); 
 
                     Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
 
                     var user = CreateUser();
+                    user.Email = Email;
 
                     await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
 
-                    var createResult = await _userManager.CreateAsync(user);
+                    var createResult = await _userManager.CreateAsync(user); // here is where the user is actually added to the DB
                     if (createResult.Succeeded)
                     {
                         createResult = await _userManager.AddLoginAsync(user, externalLoginInfo);
@@ -147,14 +149,15 @@ namespace Get_Together_Riders.Areas.Identity.Pages.Account
                 _logger.LogInformation("{ClaimType} : {ClaimValue}", claim.Type, claim.Value);
             }
 
-            var profilePictureUrl = claims?.FirstOrDefault(x => x.Type.Equals("Picture", StringComparison.OrdinalIgnoreCase))?.Value;
-            _logger.LogInformation("This user's profile picture URL = {profilePictureUrl}", profilePictureUrl);
+            // This was for Facebook Login
+            // var profilePictureUrl = claims?.FirstOrDefault(x => x.Type.Equals("Picture", StringComparison.OrdinalIgnoreCase))?.Value;
+            // _logger.LogInformation("This user's profile picture URL = {profilePictureUrl}", profilePictureUrl);
 
-            //I added the below to pull email from claim returned by facebook
+            //I added the below to pull email from claim returned by external login provider
             _logger.LogInformation("{Email} logged in with {LoginProvider} provider.", externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email), externalLoginInfo.LoginProvider);
             _logger.LogInformation("{NameIdentifier} logged in with {LoginProvider} provider.", externalLoginInfo.Principal.FindFirstValue(ClaimTypes.NameIdentifier), externalLoginInfo.LoginProvider);
 
-            // try and match facebook email to a rider email - is this an existing rider that exists in the DB?
+            // try and match provider email to a rider email - is this an existing rider that exists in the DB?
             var rider = _riderRepository.GetRiderByEmail(externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email));
 
             if (rider != null)
