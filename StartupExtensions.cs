@@ -32,6 +32,7 @@ namespace Get_Together_Riders
 
             services.AddAuthentication().AddMicrosoftAccount(options =>
             {
+                // danieljamesspindler83@hotmail.com
                 options.ClientId = "df01c830-2308-4412-a3e2-e873dafa3981";
                 options.ClientSecret = appSecret;
             });
@@ -78,7 +79,7 @@ namespace Get_Together_Riders
             // app.UseMiddleware<ExceptionMiddleware>(); // this is for API's really - dont think ill use it. UseExceptionHandler is more useful.
 
             // pretty error pages are good hmmm K
-            app.UseExceptionHandler("/Error");
+            //app.UseExceptionHandler("/Error");
 
             //if (app.Environment.IsDevelopment())
             //{
