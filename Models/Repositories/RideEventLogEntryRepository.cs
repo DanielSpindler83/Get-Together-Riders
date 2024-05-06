@@ -1,5 +1,7 @@
 ﻿using Get_Together_Riders.Models.Database;
 using Get_Together_Riders.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Get_Together_Riders.Models.Repositories
 {
@@ -39,6 +41,17 @@ namespace Get_Together_Riders.Models.Repositories
         public void SaveChanges()
         {
             _gTRDbContext.SaveChanges();
+        }
+
+        public IEnumerable<RideEventLogEntry> GetAllRideEventLogEntries()
+        {
+            // Note we also pull back the navigation properteis Rider and RideEvent
+            var eventLogEntries = _gTRDbContext.RideEventLogEntries
+                                    .Include(entry => entry.Rider)
+                                    .Include(entry => entry.RideEvent)
+                                    .ToList();
+ 
+            return eventLogEntries;
         }
     }
 

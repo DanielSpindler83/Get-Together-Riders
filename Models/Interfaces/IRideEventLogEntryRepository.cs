@@ -3,6 +3,7 @@
     public interface IRideEventLogEntryRepository
     {
         RideEventLogEntry GetRideEventLogEntryById(int id);
+        IEnumerable<RideEventLogEntry> GetAllRideEventLogEntries();
         void AddRideEventLogEntry(RideEventLogEntry rideEventLogEntry);
         void UpdateRideEventLogEntry(RideEventLogEntry rideEventLogEntry);
         void DeleteRideEventLogEntry(int id);

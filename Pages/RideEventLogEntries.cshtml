@@ -1,0 +1,35 @@
+﻿@page
+@model Get_Together_Riders.Pages.RideEventLogEntriesModel
+
+<h1>@ViewData["Title"]</h1>
+<br />
+<br />
+<h2>Ride Event Log Entries</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ride Event Log Entry ID</th>
+            <th>Rider Name</th>
+            <th>Ride Event</th>
+            <th>Suburb Left From</th>
+            <th>Start Time</th>
+            <th>Kms To Check In</th>
+            <th>Total Kms</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rideEventLogEntry in Model.RideEventLogEntries)
+        {
+            <tr>
+                <td class="col-1">@rideEventLogEntry.RideEventLogEntryID</td>
+                <td class="col-2">@rideEventLogEntry.Rider.FirstName @rideEventLogEntry.Rider.LastName</td>
+                <td class="col-3">@rideEventLogEntry.RideEvent.EventName</td>
+                <td class="col-4">@rideEventLogEntry.SuburbLeftFrom</td>
+                <td class="col-5">@rideEventLogEntry.StartTime</td>
+                <td class="col-6">@rideEventLogEntry.KmsToCheckIn</td>
+                <td class="col-7">@rideEventLogEntry.TotalKms</td>
+
+            </tr>
+        }
+    </tbody>
+</table>

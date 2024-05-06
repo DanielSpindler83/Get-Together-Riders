@@ -38,6 +38,9 @@
                 <td class="col-1">@rideEvent.EventCategory</td>
                 <td class="col-2">@rideEvent.StartDate</td>
                 <td class="col-3">@rideEvent.EndDate</td>
+                <td class="col-4">
+                    <a asp-page="/RideEventLogEntries" asp-route-RideEventID="@rideEvent.RideEventID">View Entries</a>
+                </td>
             </tr>
         }
     </tbody>
@@ -62,6 +65,9 @@
                 <td class="col-1">@rideEvent.EventCategory</td>
                 <td class="col-2">@rideEvent.StartDate</td>
                 <td class="col-3">@rideEvent.EndDate</td>
+                <td class="col-4">
+                    <a asp-page="/RideEventLogEntries" asp-route-RideEventID="@rideEvent.RideEventID">View Entries</a>
+                </td>
             </tr>
         }
     </tbody>
