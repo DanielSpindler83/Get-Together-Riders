@@ -3,6 +3,7 @@ using Get_Together_Riders.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Get_Together_Riders.Pages
@@ -28,6 +29,17 @@ namespace Get_Together_Riders.Pages
                 RideEventLogEntries = RideEventLogEntries.Where(entry => entry.RideEventID == rideEventID.Value);
             }
 
+        }
+
+        public IActionResult OnPostDelete(int rideEventLogEntryID)
+        {
+            var entryToDelete = _rideEventLogEntryRepository.GetRideEventLogEntryById(rideEventLogEntryID);
+            if (entryToDelete != null)
+            {
+                _rideEventLogEntryRepository.DeleteRideEventLogEntry(rideEventLogEntryID);
+                _rideEventLogEntryRepository.SaveChanges();
+            }
+            return RedirectToPage(); // Redirect back to the same page after deletion
         }
     }
 }

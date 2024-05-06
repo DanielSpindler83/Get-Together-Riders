@@ -28,7 +28,11 @@
                 <td class="col-5">@rideEventLogEntry.StartTime</td>
                 <td class="col-6">@rideEventLogEntry.KmsToCheckIn</td>
                 <td class="col-7">@rideEventLogEntry.TotalKms</td>
-
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-rideEventLogEntryID="@rideEventLogEntry.RideEventLogEntryID">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
