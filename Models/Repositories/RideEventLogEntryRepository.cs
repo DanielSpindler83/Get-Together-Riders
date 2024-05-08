@@ -45,7 +45,7 @@ namespace Get_Together_Riders.Models.Repositories
 
         public IEnumerable<RideEventLogEntry> GetAllRideEventLogEntries()
         {
-            // Note we also pull back the navigation properteis Rider and RideEvent
+            // Note we also pull back the navigation properties Rider and RideEvent
             var eventLogEntries = _gTRDbContext.RideEventLogEntries
                                     .Include(entry => entry.Rider)
                                     .Include(entry => entry.RideEvent)
